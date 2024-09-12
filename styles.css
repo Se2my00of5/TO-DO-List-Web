@@ -15,6 +15,25 @@ body {
     height: 100vh;
 }
 
+#menu{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+#menu button{
+    width: 100px;
+    height: 40px;
+    font-size: 25px;
+    background: #7fb49956;
+    box-shadow: 0 0 30px 0px #7fb4997c;
+    border-radius: 4px;
+}
+#menu button:hover{
+    background: #7fb49979;
+}
+
+
 .todo-list {
     position: absolute;
     background-color: #fff;

@@ -1,25 +1,15 @@
-showTasks();
 
 function dict(text,flag=0){
 	return {"text":text,"status":flag};
 }
 
+var arrayToDo = [];
+
 //добавление нового дела
 document.getElementById('add-btn').addEventListener('click', function() {
     let inputText = document.getElementById('input-text');
     if (inputText.value.trim() !== '') {
-		let getArrayToDo = localStorage.getItem("ArrayToDo"); 
-		
-		if(getArrayToDo == null){ 
-		  arrayToDo = [];
-		}
-		else{
-		  arrayToDo = JSON.parse(getArrayToDo);  
-		}
-
 		arrayToDo.push(dict(inputText.value.trim()));
-
-		localStorage.setItem("ArrayToDo", JSON.stringify(arrayToDo)); 
 
 		inputText.value = '';
 		showTasks(); 
@@ -28,13 +18,7 @@ document.getElementById('add-btn').addEventListener('click', function() {
 
 //удаление дела
 function deleteTask(index){
-	let getArrayToDo = localStorage.getItem("ArrayToDo");
-
-	arrayToDo = JSON.parse(getArrayToDo);
-
 	arrayToDo.splice(index, 1); 
-
-	localStorage.setItem("ArrayToDo", JSON.stringify(arrayToDo));
 
 	showTasks(); 
 }
@@ -42,8 +26,6 @@ function deleteTask(index){
 
 //редактирование дела
 function editTask(index){
-	let getArrayToDo = localStorage.getItem("ArrayToDo");
-	arrayToDo = JSON.parse(getArrayToDo);
 
 	let text = arrayToDo[index].text;
 	let liTag = document.getElementById("edit"+index).closest("li");
@@ -69,36 +51,21 @@ function editTask(index){
 			if(editInput.value.trim()!=text){
 				arrayToDo.splice(index, 1, dict(editInput.value.trim())); 
 			}
-			localStorage.setItem("ArrayToDo", JSON.stringify(arrayToDo));
-
+			
 			showTasks(); 
 		}
 	});
 }
 
 function acceptOrCancelTask(index){
-	let getArrayToDo = localStorage.getItem("ArrayToDo");
-	arrayToDo = JSON.parse(getArrayToDo);
-
 	arrayToDo[index].status = Math.abs(arrayToDo[index].status-1);
-
-	
-	localStorage.setItem("ArrayToDo", JSON.stringify(arrayToDo));
 	
 	showTasks();
 }
 
 //отображение списка дел
 function showTasks(){
-	let getArrayToDo = localStorage.getItem("ArrayToDo");
 	let listToDo = document.getElementById('list-todo');
-
-	if(getArrayToDo == null){
-	  arrayToDo = [];
-	}
-	else{
-	  arrayToDo = JSON.parse(getArrayToDo); 
-	}
 	
 	let newLiTag = "";
 	arrayToDo.forEach((element, index) => {
@@ -133,3 +100,34 @@ function showTasks(){
 
 	listToDo.innerHTML = newLiTag;
 }
+
+
+
+document.getElementById('save').addEventListener('click', function() {
+    let jsonStr = JSON.stringify(arrayToDo, null, 2);
+
+    let url = "data:text/json;charset=utf-8," + encodeURIComponent(jsonStr);
+
+    let download = document.createElement('a');
+    download.href = url;
+    download.download = "todolist.json";
+
+    download.click();
+});
+
+
+document.getElementById('load').addEventListener('click', function() {
+	document.getElementById('file-input').click(); 
+});
+
+document.getElementById('file-input').addEventListener('change', function() {
+	const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            arrayToDo = JSON.parse(e.target.result);
+            showTasks();
+        };
+        reader.readAsText(file);
+    }
+});

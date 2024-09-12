@@ -9,9 +9,13 @@
     </head>
     <body>
         
-        <div class="todo-list">   
+        <div class="todo-list">  
+            <div id="menu">
+                <button id="load">load <input type="file" id="file-input" accept=".json" style="display: none;"></button>
+                <h1>Список дел</h1>
+                <button id="save">save</button>
+            </div> 
             
-            <h1>Список дел</h1>
             <div class="new-todo">
                 <textarea id="input-text" placeholder="Введите новое дело"></textarea>
                 <button id="add-btn">Добавить</button>
